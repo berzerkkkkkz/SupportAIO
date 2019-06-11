@@ -164,7 +164,7 @@ namespace SupportAIO.Champions
 
         protected override void SetMenu()
         {
-            RootMenu = new Menu("root", "Z字号风女", true);
+            RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
             RootMenu.Add(new MenuKeyBind("insec", "回旋吹", Keys.T, KeyBindType.Press));
 
 

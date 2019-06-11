@@ -349,9 +349,9 @@ namespace SupportAIO.Champions
 
         protected override void SetMenu()
         {
-            RootMenu = new Menu("root", "Z字号婕拉", true);
+            RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            
+
 
             ComboMenu = new Menu("combo", "连招");
             {
