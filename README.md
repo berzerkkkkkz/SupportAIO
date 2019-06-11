@@ -26,5 +26,3 @@ Soraka 奶妈
 Zilean 时光
 
 Zyra 婕拉
-
-### noted there is only Chinese menu in game for this version. 
