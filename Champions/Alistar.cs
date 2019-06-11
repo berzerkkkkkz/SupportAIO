@@ -15,6 +15,8 @@ namespace SupportAIO.Champions
 {
     class Alistar : Common.Champion
     {
+        internal static int language = 0;
+
         internal Alistar()
         {
             this.SetSpells();
@@ -231,38 +233,81 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1","Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("usew", "使用 W"));
-                ComboMenu.Add(new MenuBool("usee", "使用 E"));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuBool("autor", "被控自动R"));
-                ComboMenu.Add(new MenuSlider("hp", "自动R 当血量%<=", 25, 10, 100));
-                ComboMenu.Add(new MenuSlider("hitr", "自动R时附近敌人>=", 2, 1, 5));
+                ComboMenu = new Menu("combo", "连招");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("usew", "使用 W"));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E"));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuBool("autor", "被控自动R"));
+                    ComboMenu.Add(new MenuSlider("hp", "自动R 当血量%<=", 25, 10, 100));
+                    ComboMenu.Add(new MenuSlider("hitr", "自动R时附近敌人>=", 2, 1, 5));
 
+                }
+                RootMenu.Add(ComboMenu);
+                KillstealMenu = new Menu("killsteal", "抢人头");
+                {
+                    KillstealMenu.Add(new MenuBool("useq", "使用 Q", false));
+                    KillstealMenu.Add(new MenuBool("usew", "使用 W", false));
+
+                }
+                RootMenu.Add(KillstealMenu);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离", false));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离", false));
+                    DrawMenu.Add(new MenuBool("drawflash", "显示Q闪距离"));
+                    DrawMenu.Add(new MenuBool("drawengage", "显示WQ闪距离", false));
+
+                }
+                RootMenu.Add(DrawMenu);
+
+                RootMenu.Add(new MenuKeyBind("flashq", "Q闪!", Keys.T, KeyBindType.Press));
+                RootMenu.Add(new MenuKeyBind("flashe", "WQ闪!", Keys.G, KeyBindType.Press));
+             
             }
-            RootMenu.Add(ComboMenu);
-            KillstealMenu = new Menu("killsteal", "抢人头");
+            else
             {
-                KillstealMenu.Add(new MenuBool("useq", "使用 Q",false));
-                KillstealMenu.Add(new MenuBool("usew", "使用 W",false));
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
+                    ComboMenu.Add(new MenuBool("autor", "Auto R on CC"));
+                    ComboMenu.Add(new MenuSlider("hp", "Use R if HP <=", 25, 10, 100));
+                    ComboMenu.Add(new MenuSlider("hitr", "Min. Enemies", 2, 1, 5));
 
+                }
+                RootMenu.Add(ComboMenu);
+                KillstealMenu = new Menu("killsteal", "Killsteal");
+                {
+                    KillstealMenu.Add(new MenuBool("useq", "Use Q to Killsteal"));
+                    KillstealMenu.Add(new MenuBool("usew", "Use W to Killsteal"));
+
+                }
+                RootMenu.Add(KillstealMenu);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawflash", "Draw Q Flash Range"));
+                    DrawMenu.Add(new MenuBool("drawengage", "Draw Engage Range"));
+
+                }
+                RootMenu.Add(DrawMenu);
+
+                RootMenu.Add(new MenuKeyBind("flashq", "Q - Flash", Keys.T, KeyBindType.Press));
+                RootMenu.Add(new MenuKeyBind("flashe", "W - Q - Flash", Keys.G, KeyBindType.Press));
             }
-            RootMenu.Add(KillstealMenu);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离", false));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离", false));
-                DrawMenu.Add(new MenuBool("drawflash", "显示Q闪距离"));
-                DrawMenu.Add(new MenuBool("drawengage", "显示WQ闪距离",false));
-
-            }
-            RootMenu.Add(DrawMenu);
-
-            RootMenu.Add(new MenuKeyBind("flashq", "Q闪!", Keys.T, KeyBindType.Press));
-            RootMenu.Add(new MenuKeyBind("flashe", "WQ闪!", Keys.G, KeyBindType.Press));
             RootMenu.Attach();
         }
 

@@ -16,6 +16,8 @@ namespace SupportAIO.Champions
 {
     class Soraka : Champion
     {
+        private int language;
+
         internal Soraka()
         {
             this.SetSpells();
@@ -285,68 +287,139 @@ namespace SupportAIO.Champions
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
 
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("usee", "使用 E"));
-                ComboMenu.Add(new MenuBool("support", "辅助模式"));
-            }
-           HarassMenu= new Menu("harass", "骚扰");
-            {
-                HarassMenu.Add(new MenuKeyBind("toggle", "自动骚扰", Keys.T, KeyBindType.Toggle));
-                HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                HarassMenu.Add(new MenuBool("usee", "使用 E"));
-               
-            }
-            
-            RootMenu.Add(ComboMenu);
-            RootMenu.Add(HarassMenu); KillstealMenu = new Menu("misc", "反突进");
-            {
-                KillstealMenu.Add(new MenuBool("antigapq", "反突进 E"));
-
-
-            }
-            
-            RootMenu.Add(KillstealMenu);
-            WhiteList = new Menu("heal", "W设定");
-            {
-                WhiteList.Add(new MenuBool("autow", "启用W"));
-                WhiteList.Add(new MenuList<string>("mode", "W优先级", new[] { "AD优先", "AP优先", "低血量百分比优先", "低血量数值优先", "白名单优先" }));
-                WhiteList.Add(new MenuSlider("ally", "队友血量 %<=", 50));
-                WhiteList.Add(new MenuSlider("me", "禁用W若自身血量 %<=", 30));
-                WhiteList.Add(new MenuBool("autor", "启用R"));
-                WhiteList.Add(new MenuSlider("rhealth", "队友血量 %<=", 20));
-            }
-            RootMenu.Add(WhiteList);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-            }
-            RootMenu.Add(DrawMenu);
-            FarmMenu = new Menu("white", "W 白名单");
-            {
-                FarmMenu.Add(new MenuSeparator("meow", "血量百分比模式下，仅W白名单内的队友"));
-                foreach (var target in GameObjects.AllyHeroes)
+                ComboMenu = new Menu("combo", "连招");
                 {
-                    if (!target.IsMe)
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E"));
+                    ComboMenu.Add(new MenuBool("support", "辅助模式"));
+                }
+                HarassMenu = new Menu("harass", "骚扰");
+                {
+                    HarassMenu.Add(new MenuKeyBind("toggle", "自动骚扰", Keys.T, KeyBindType.Toggle));
+                    HarassMenu.Add(new MenuBool("useq", "使用 Q"));
+                    HarassMenu.Add(new MenuBool("usee", "使用 E"));
+
+                }
+
+                RootMenu.Add(ComboMenu);
+                RootMenu.Add(HarassMenu); KillstealMenu = new Menu("misc", "反突进");
+                {
+                    KillstealMenu.Add(new MenuBool("antigapq", "反突进 E"));
+
+
+                }
+
+                RootMenu.Add(KillstealMenu);
+                WhiteList = new Menu("heal", "W设定");
+                {
+                    WhiteList.Add(new MenuBool("autow", "启用W"));
+                    WhiteList.Add(new MenuList<string>("mode", "W优先级", new[] { "AD优先", "AP优先", "低血量百分比优先", "低血量数值优先", "白名单优先" }));
+                    WhiteList.Add(new MenuSlider("ally", "队友血量 %<=", 50));
+                    WhiteList.Add(new MenuSlider("me", "禁用W若自身血量 %<=", 30));
+                    WhiteList.Add(new MenuBool("autor", "启用R"));
+                    WhiteList.Add(new MenuSlider("rhealth", "队友血量 %<=", 20));
+                }
+                RootMenu.Add(WhiteList);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                }
+                RootMenu.Add(DrawMenu);
+                FarmMenu = new Menu("white", "W 白名单");
+                {
+                    FarmMenu.Add(new MenuSeparator("meow", "血量百分比模式下，仅W白名单内的队友"));
+                    foreach (var target in GameObjects.AllyHeroes)
                     {
-                        FarmMenu.Add(new MenuBool(target.CharacterName.ToLower(), "启用: " + target.CharacterName));
-                        FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "hp", "^- 血量百分比: ", 100, 0, 100));
+                        if (!target.IsMe)
+                        {
+                            FarmMenu.Add(new MenuBool(target.CharacterName.ToLower(), "启用: " + target.CharacterName));
+                            FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "hp", "^- 血量百分比: ", 100, 0, 100));
+                        }
                     }
                 }
-            }
-            RootMenu.Add(FarmMenu);
-            WhiteList = new Menu("black", "R 黑名单");
-            {
-                foreach (var target in GameObjects.AllyHeroes)
+                RootMenu.Add(FarmMenu);
+                WhiteList = new Menu("black", "R 黑名单");
                 {
-                    WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "不R: " + target.CharacterName, false));
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+                        WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "不R: " + target.CharacterName, false));
+                    }
                 }
+                RootMenu.Add(WhiteList);
             }
-            RootMenu.Add(WhiteList);
+            else
+            {
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    ComboMenu.Add(new MenuBool("support", "Support Mode"));
+                }
+                HarassMenu = new Menu("harass", "Harass");
+                {
+                    HarassMenu.Add(new MenuKeyBind("toggle", "Toggle Key", Keys.T, KeyBindType.Toggle));
+                    HarassMenu.Add(new MenuBool("useq", "Use Q in Harass"));
+                    HarassMenu.Add(new MenuBool("usee", "Use E in Harass"));
 
+                }
+
+                RootMenu.Add(ComboMenu);
+                RootMenu.Add(HarassMenu); KillstealMenu = new Menu("misc", "Misc.");
+                {
+                    KillstealMenu.Add(new MenuBool("antigapq", "Anti-Gap E"));
+
+
+                }
+
+                RootMenu.Add(KillstealMenu);
+                WhiteList = new Menu("heal", "Healing");
+                {
+                    WhiteList.Add(new MenuBool("autow", "Enable W Healing"));
+                    WhiteList.Add(new MenuList<string>("mode", "Healing Priority", new[] { "Most AD", "Most AP", "Least Health", "Least Health (Squishies)", "Whitelist" }));
+                    WhiteList.Add(new MenuSlider("ally", "Ally Health Percent <=", 50));
+                    WhiteList.Add(new MenuSlider("me", "Don't W if my Health <=", 30));
+                    WhiteList.Add(new MenuBool("autor", "Enable R Healing"));
+                    WhiteList.Add(new MenuBool("semi", "^- Semi Manual  R", false));
+                    WhiteList.Add(new MenuSlider("rhealth", "Ally R Health <=", 20));
+                }
+                RootMenu.Add(WhiteList);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("toggle", "Draw Toggle"));
+                }
+                RootMenu.Add(DrawMenu);
+                FarmMenu = new Menu("white", "W White List");
+                {
+                    FarmMenu.Add(new MenuSeparator("meow", "Health Percent only works if Whitelist Mode"));
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+                        if (!target.IsMe)
+                        {
+                            FarmMenu.Add(new MenuBool(target.CharacterName.ToLower(), "Enable: " + target.CharacterName));
+                            FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "hp", "^- Health Percent: ", 100, 0, 100));
+                        }
+                    }
+                }
+                RootMenu.Add(FarmMenu);
+                WhiteList = new Menu("black", "R Black List");
+                {
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+                        WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "Block: " + target.CharacterName, false));
+                    }
+                }
+                RootMenu.Add(WhiteList);
+            }
             RootMenu.Attach();
         }
 

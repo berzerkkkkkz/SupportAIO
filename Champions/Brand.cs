@@ -15,6 +15,8 @@ namespace SupportAIO.Champions
 {
     class Brand : Champion
     {
+        private int language;
+
         internal Brand()
         {
             this.SetSpells();
@@ -622,53 +624,112 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuList<string>("combomode", "连招模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuList<string>("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
-                ComboMenu.Add(new MenuBool("usew", "使用 W"));
-                ComboMenu.Add(new MenuBool("usee", "使用 E"));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuList<string>("rmode", "R 模式", new[] { "低血量", "可击杀" }));
 
-                ComboMenu.Add(new MenuSlider("bounce", "R命中人数>=", 1, 1, 5));
-                ComboMenu.Add(new MenuBool("minion", "^- 计算弹射小兵"));
+                ComboMenu = new Menu("combo", "连招");
+                {
+                    ComboMenu.Add(new MenuList<string>("combomode", "连招模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuList<string>("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
+                    ComboMenu.Add(new MenuBool("usew", "使用 W"));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E"));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuList<string>("rmode", "R 模式", new[] { "低血量", "可击杀" }));
 
-                ComboMenu.Add(new MenuSlider("hp", "使用R当目标血量% <= (低血量模式)", 50, 1, 100));
-                ComboMenu.Add(new MenuBool("support", "辅助模式"));
+                    ComboMenu.Add(new MenuSlider("bounce", "R命中人数>=", 1, 1, 5));
+                    ComboMenu.Add(new MenuBool("minion", "^- 计算弹射小兵"));
+
+                    ComboMenu.Add(new MenuSlider("hp", "使用R当目标血量% <= (低血量模式)", 50, 1, 100));
+                    ComboMenu.Add(new MenuBool("support", "辅助模式"));
+                }
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("harass", "骚扰");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "蓝量控制", 50, 1, 100));
+
+                    HarassMenu.Add(new MenuBool("useq", "使用 Q"));
+                    HarassMenu.Add(new MenuList<string>("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
+                    HarassMenu.Add(new MenuBool("usew", "使用 W"));
+                    HarassMenu.Add(new MenuBool("usee", "使用 E"));
+                    HarassMenu.Add(new MenuList<string>("harassmode", "骚扰模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+
+                }
+                RootMenu.Add(HarassMenu);
+                KillstealMenu = new Menu("ks", "抢人头");
+                {
+                    KillstealMenu.Add(new MenuBool("ksq", "使用Q"));
+                    KillstealMenu.Add(new MenuBool("ksw", "使用W"));
+                    KillstealMenu.Add(new MenuBool("kse", "使用E"));
+                    KillstealMenu.Add(new MenuBool("ksr", "使用R"));
+                    KillstealMenu.Add(new MenuSlider("bounce", "^- 仅当可弹射敌人>=", 1, 1, 5));
+
+                }
+                RootMenu.Add(KillstealMenu);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+                }
+                RootMenu.Add(DrawMenu);
+          
             }
-            RootMenu.Add(ComboMenu);
-            HarassMenu = new Menu("harass", "骚扰");
+            else
             {
-                HarassMenu.Add(new MenuSlider("mana", "蓝量控制", 50, 1, 100));
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuList<string>("combomode", "Combo Mode", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuList<string>("qmode", "Q Mode", new[] { "Always", "Only Stun" }));
+                    ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
+                    ComboMenu.Add(new MenuList<string>("rmode", "R Mode", new[] { "If X Health", "Only if Killable" }));
 
-                HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                HarassMenu.Add(new MenuList<string>("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
-                HarassMenu.Add(new MenuBool("usew", "使用 W"));
-                HarassMenu.Add(new MenuBool("usee", "使用 E"));
-                HarassMenu.Add(new MenuList<string>("harassmode", "骚扰模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+                    ComboMenu.Add(new MenuSlider("bounce", "Use R if Bounces On X Targets", 1, 1, 5));
+                    ComboMenu.Add(new MenuBool("minion", "^- Include Minions for Bounce"));
 
-            }
-            RootMenu.Add(HarassMenu);
-            KillstealMenu = new Menu("ks", "抢人头");
-            {
-                KillstealMenu.Add(new MenuBool("ksq", "使用Q"));
-                KillstealMenu.Add(new MenuBool("ksw", "使用W"));
-                KillstealMenu.Add(new MenuBool("kse", "使用E"));
-                KillstealMenu.Add(new MenuBool("ksr", "使用R"));
-                KillstealMenu.Add(new MenuSlider("bounce", "^- 仅当可弹射敌人>=", 1, 1, 5));
+                    ComboMenu.Add(new MenuSlider("hp", "If Health <= ( If X Health Mode)", 50, 1, 100));
+                    ComboMenu.Add(new MenuBool("support", "Support Mode"));
+                }
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("harass", "Harass");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "Mana Percent", 50, 1, 100));
 
+                    HarassMenu.Add(new MenuBool("useq", "Use Q in Harass"));
+                    HarassMenu.Add(new MenuList<string>("qmode", "Q Mode", new[] { "Always", "Only Stun" }));
+                    HarassMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    HarassMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    HarassMenu.Add(new MenuList<string>("harassmode", "Harass Mode", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+
+                }
+                RootMenu.Add(HarassMenu);
+                KillstealMenu = new Menu("ks", "Killsteal");
+                {
+                    KillstealMenu.Add(new MenuBool("ksq", "Killseal with Q"));
+                    KillstealMenu.Add(new MenuBool("ksw", "Killseal with W"));
+                    KillstealMenu.Add(new MenuBool("kse", "Killseal with E"));
+                    KillstealMenu.Add(new MenuBool("ksr", "Killseal with R"));
+                    KillstealMenu.Add(new MenuSlider("bounce", "^- Only if Bounces on X Enemies", 1, 1, 5));
+
+                }
+                RootMenu.Add(KillstealMenu);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+                }
+                RootMenu.Add(DrawMenu);
             }
-            RootMenu.Add(KillstealMenu);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
-            }
-            RootMenu.Add(DrawMenu);
             RootMenu.Attach();
         }
 

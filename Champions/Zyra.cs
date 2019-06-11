@@ -18,6 +18,7 @@ namespace SupportAIO.Champions
 {
     class Zyra : Champion
     {
+        private int language;
 
         internal Zyra()
         {
@@ -352,46 +353,95 @@ namespace SupportAIO.Champions
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
 
-
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuList<string>("mode", "连招模式", new[] { "Q > W > R > E > W", "E > W > R > Q > W" }));
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("usew", "使用 W"));
-                ComboMenu.Add(new MenuBool("usee", "使用 E"));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuList<string>("rusage", "R 模式", new[] { "可击中多个英雄", "连招可击杀" }));
-                ComboMenu.Add(new MenuSlider("rhit", "若可击中 >= (可击中多个英雄模式)", 2, 1, 5));
-                ComboMenu.Add(new MenuKeyBind("semir", "半自动R", Keys.T, KeyBindType.Press));
-                ComboMenu.Add(new MenuBool("support", "辅助模式"));
-            }
-            RootMenu.Add(ComboMenu);
+
+                ComboMenu = new Menu("combo", "连招");
+                {
+                    ComboMenu.Add(new MenuList<string>("mode", "连招模式", new[] { "Q > W > R > E > W", "E > W > R > Q > W" }));
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("usew", "使用 W"));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E"));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuList<string>("rusage", "R 模式", new[] { "可击中多个英雄", "连招可击杀" }));
+                    ComboMenu.Add(new MenuSlider("rhit", "若可击中 >= (可击中多个英雄模式)", 2, 1, 5));
+                    ComboMenu.Add(new MenuKeyBind("semir", "半自动R", Keys.T, KeyBindType.Press));
+                    ComboMenu.Add(new MenuBool("support", "辅助模式"));
+                }
+                RootMenu.Add(ComboMenu);
 
 
-            HarassMenu = new Menu("harass", "骚扰");
-            {
-                HarassMenu.Add(new MenuSlider("mana", "蓝量控制", 50, 1, 100));
-                HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                HarassMenu.Add(new MenuBool("usew", "使用 W"));
-                HarassMenu.Add(new MenuBool("usee", "使用 E"));
-            }
-            RootMenu.Add(HarassMenu);
-            
-            KillstealMenu = new Menu("misc", "自动");
-            {
-                KillstealMenu.Add(new MenuBool("autoe", "自动E被控目标"));
-            }
-            RootMenu.Add(KillstealMenu);
+                HarassMenu = new Menu("harass", "骚扰");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "蓝量控制", 50, 1, 100));
+                    HarassMenu.Add(new MenuBool("useq", "使用 Q"));
+                    HarassMenu.Add(new MenuBool("usew", "使用 W"));
+                    HarassMenu.Add(new MenuBool("usee", "使用 E"));
+                }
+                RootMenu.Add(HarassMenu);
 
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
-                DrawMenu.Add(new MenuBool("drawseed", "显示种子位置"));
+                KillstealMenu = new Menu("misc", "自动");
+                {
+                    KillstealMenu.Add(new MenuBool("autoe", "自动E被控目标"));
+                }
+                RootMenu.Add(KillstealMenu);
+
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+                    DrawMenu.Add(new MenuBool("drawseed", "显示种子位置"));
+                }
+                RootMenu.Add(DrawMenu);
             }
-            RootMenu.Add(DrawMenu);
+            else
+            {
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuList<string>("mode", "Combo Usage", new[] { "Q > W > R > E > W", "E > W > R > Q > W" }));
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
+                    ComboMenu.Add(new MenuList<string>("rusage", "R Usage", new[] { "If Hits X Enemies", "If Killable with Combo" }));
+                    ComboMenu.Add(new MenuSlider("rhit", "If X Enemies <= (If Hits X Enemies Mode)", 2, 1, 5));
+                    ComboMenu.Add(new MenuKeyBind("semir", "Semi-R Key", Keys.T, KeyBindType.Press));
+                    ComboMenu.Add(new MenuBool("support", "Support Mode"));
+                }
+                RootMenu.Add(ComboMenu);
+
+
+                HarassMenu = new Menu("harass", "Harass");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "Mana Percent", 50, 1, 100));
+                    HarassMenu.Add(new MenuBool("useq", "Use Q to Harass"));
+                    HarassMenu.Add(new MenuBool("usew", "Use W to Harass"));
+                    HarassMenu.Add(new MenuBool("usee", "Use E to Harass"));
+                }
+                RootMenu.Add(HarassMenu);
+
+                KillstealMenu = new Menu("misc", "Misc.");
+                {
+                    KillstealMenu.Add(new MenuBool("autoe", "Auto E on CC"));
+                }
+                RootMenu.Add(KillstealMenu);
+
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+                    DrawMenu.Add(new MenuBool("drawseed", "Draw Seeds"));
+                }
+                RootMenu.Add(DrawMenu);
+
+            }
             RootMenu.Attach();
         }
         internal override void OnGapcloser(AIBaseClient target, GapcloserArgs Args)

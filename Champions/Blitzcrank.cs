@@ -15,6 +15,7 @@ namespace SupportAIO.Champions
 {
     class Blitzcrank : Champion
     {
+        private int language;
 
         internal Blitzcrank()
         {
@@ -188,46 +189,94 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            ComboMenu = new Menu("combo", "连招");
-            {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("usee", "使用 E "));
-                ComboMenu.Add(new MenuBool("eq", "^- 仅Q到后E",false));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuSlider("hitr", "^- 当可击中敌人>=", 2, 1, 5));
-            }
-            RootMenu.Add(ComboMenu);
-            var QSet = new Menu("qset", "Q 设置");
-            {
-                QSet.Add(new MenuKeyBind("grabq", "半自动 Q", Keys.T, KeyBindType.Press));
-                QSet.Add(new MenuBool("autoq", "自动Q目标落点", true));
-                QSet.Add(new MenuSlider("minq", "最近Q距离", 300, 10, 400));
-                QSet.Add(new MenuSlider("maxq", "最远Q距离", 900, 500, 900));
-            }
-            RootMenu.Add(QSet);
-            WhiteList = new Menu("black", "Q黑名单");
-            {
-                foreach (var target in GameObjects.EnemyHeroes)
-                {
-                    WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "禁止Q: " + target.CharacterName, false));
-                }
-            }
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
 
-            RootMenu.Add(WhiteList);
-            var DrawMenu = new Menu("drawings", "显示");
+            if (language != 1)
             {
-                DrawMenu.Add(new MenuBool("qmax", "显示 Q 最远距离"));
-                DrawMenu.Add(new MenuBool("qmin", "显示 Q 最近距离",false));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+                ComboMenu = new Menu("combo", "连招");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E "));
+                    ComboMenu.Add(new MenuBool("eq", "^- 仅Q到后E", false));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuSlider("hitr", "^- 当可击中敌人>=", 2, 1, 5));
+                }
+                RootMenu.Add(ComboMenu);
+                var QSet = new Menu("qset", "Q 设置");
+                {
+                    QSet.Add(new MenuKeyBind("grabq", "半自动 Q", Keys.T, KeyBindType.Press));
+                    QSet.Add(new MenuBool("autoq", "自动Q目标落点", true));
+                    QSet.Add(new MenuSlider("minq", "最近Q距离", 300, 10, 400));
+                    QSet.Add(new MenuSlider("maxq", "最远Q距离", 900, 500, 900));
+                }
+                RootMenu.Add(QSet);
+                WhiteList = new Menu("black", "Q黑名单");
+                {
+                    foreach (var target in GameObjects.EnemyHeroes)
+                    {
+                        WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "禁止Q: " + target.CharacterName, false));
+                    }
+                }
+
+                RootMenu.Add(WhiteList);
+                var DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("qmax", "显示 Q 最远距离"));
+                    DrawMenu.Add(new MenuBool("qmin", "显示 Q 最近距离", false));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+                }
+                RootMenu.Add(DrawMenu);
+                KillstealMenu = new Menu("killsteal", "抢人头");
+                {
+                    KillstealMenu.Add(new MenuBool("ksq", "使用Q"));
+                    KillstealMenu.Add(new MenuBool("ksr", "使用R"));
+                }
+                RootMenu.Add(KillstealMenu);
             }
-            RootMenu.Add(DrawMenu);
-            KillstealMenu = new Menu("killsteal", "抢人头");
+            else
             {
-                KillstealMenu.Add(new MenuBool("ksq", "使用Q"));
-                KillstealMenu.Add(new MenuBool("ksr", "使用R"));
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q"));
+                    ComboMenu.Add(new MenuBool("usee", "Use E "));
+                    ComboMenu.Add(new MenuBool("eq", "^- Only if Q Landed"));
+                    ComboMenu.Add(new MenuBool("user", "Use R"));
+                    ComboMenu.Add(new MenuSlider("hitr", "^- if Hits X Enemies", 2, 1, 5));
+                }
+                RootMenu.Add(ComboMenu);
+                var QSet = new Menu("qset", "Q Settings");
+                {
+                    QSet.Add(new MenuKeyBind("grabq", "Grab Q", Keys.T, KeyBindType.Press));
+                    QSet.Add(new MenuBool("autoq", "Use Auto Q on Dash", true));
+                    QSet.Add(new MenuSlider("minq", "Min Q Range", 300, 10, 400));
+                    QSet.Add(new MenuSlider("maxq", "Max Q Range", 900, 500, 900));
+                }
+                RootMenu.Add(QSet);
+                WhiteList = new Menu("black", "Black List");
+                {
+                    foreach (var target in GameObjects.EnemyHeroes)
+                    {
+                        WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "Block: " + target.CharacterName, false));
+                    }
+                }
+
+                RootMenu.Add(WhiteList);
+                var DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("qmax", "Draw Q Max."));
+                    DrawMenu.Add(new MenuBool("qmin", "Draw Q Min."));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+                }
+                RootMenu.Add(DrawMenu);
+                KillstealMenu = new Menu("killsteal", "Killsteal");
+                {
+                    KillstealMenu.Add(new MenuBool("ksq", "Killsteal with Q"));
+                    KillstealMenu.Add(new MenuBool("ksr", "Killsteal with R"));
+                }
+                RootMenu.Add(KillstealMenu);
             }
-            RootMenu.Add(KillstealMenu);
-        
 
             RootMenu.Attach();
         }

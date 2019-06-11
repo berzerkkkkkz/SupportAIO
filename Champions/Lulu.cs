@@ -19,6 +19,7 @@ namespace SupportAIO.Champions
 {
     class Lulu : Champion
     {
+        private int language;
 
         internal Lulu()
         {
@@ -760,103 +761,211 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("useeq", "使用EQ延长攻击", false));
-                var WSettings = new Menu("wset", "W 设置");
-                WSettings.Add(new MenuBool("usew", "使用 W"));
-                var EnemySet = new Menu("enemy", "敌人设定");
-                EnemySet.Add(new MenuSeparator("meow", "0 为禁用"));
-                EnemySet.Add(new MenuSeparator("meowmeow", "1 优先最低,5 最高"));
-                foreach (var target in GameObjects.EnemyHeroes)
-                {
 
-                    EnemySet.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
+                ComboMenu = new Menu("combo", "连招");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("useeq", "使用EQ延长攻击", false));
+                    var WSettings = new Menu("wset", "W 设置");
+                    WSettings.Add(new MenuBool("usew", "使用 W"));
+                    var EnemySet = new Menu("enemy", "敌人设定");
+                    EnemySet.Add(new MenuSeparator("meow", "0 为禁用"));
+                    EnemySet.Add(new MenuSeparator("meowmeow", "1 优先最低,5 最高"));
+                    foreach (var target in GameObjects.EnemyHeroes)
+                    {
+
+                        EnemySet.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
+
+                    }
+                    var AllySet = new Menu("ally", "队友设定");
+                    AllySet.Add(new MenuSeparator("meow", "0 为禁用"));
+                    AllySet.Add(new MenuSeparator("meowmeow", "1 优先最低,5 最高"));
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+
+                        AllySet.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
+
+                    }
+                    ComboMenu.Add(WSettings);
+                    WSettings.Add(EnemySet);
+                    WSettings.Add(AllySet);
+
+                    ComboMenu.Add(new MenuList<string>("emode", "E 模式", new[] { "总是", "连招逻辑", "从不" }));
+                    var RSettings = new Menu("rset", "R 设置");
+                    RSettings.Add(new MenuBool("user", "使用 R"));
+                    RSettings.Add(new MenuSlider("hitr", "^- 若可击飞敌人 >=", 2, 0, 5));
+                    RSettings.Add(new MenuSlider("hp", "^- 若队友血量% <=", 20, 0, 100));
+                    RSettings.Add(new MenuBool("autor", "受致命伤害前R"));
+                    RSettings.Add(new MenuKeyBind("semir", "半自动R最低血量队友", Keys.T, KeyBindType.Press));
+                    ComboMenu.Add(RSettings);
+                    ComboMenu.Add(new MenuBool("support", "辅助模式", false));
 
                 }
-                var AllySet = new Menu("ally", "队友设定");
-                AllySet.Add(new MenuSeparator("meow", "0 为禁用"));
-                AllySet.Add(new MenuSeparator("meowmeow", "1 优先最低,5 最高"));
+
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("harass", "骚扰");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "蓝量管理", 30, 0, 100));
+                    HarassMenu.Add(new MenuBool("useq", "使用 Q"));
+                    HarassMenu.Add(new MenuBool("usee", "使用 E"));
+                    HarassMenu.Add(new MenuBool("useeq", "使用EQ延长攻击"));
+
+                }
+                RootMenu.Add(HarassMenu);
+                var WE = new Menu("we", "WE 设定");
+                WE.Add(new MenuKeyBind("key", "WE连招", Keys.G, KeyBindType.Press));
+
+                WE.Add(new MenuSeparator("meow", "0 为禁用"));
+                WE.Add(new MenuSeparator("meowmeow", "1 优先最低,5 最高"));
                 foreach (var target in GameObjects.AllyHeroes)
                 {
 
-                    AllySet.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
+                    WE.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
 
                 }
-                ComboMenu.Add(WSettings);
-                WSettings.Add(EnemySet);
-                WSettings.Add(AllySet);
-                
-                ComboMenu.Add(new MenuList<string>("emode", "E 模式", new[] { "总是", "连招逻辑", "从不"}));
-                var RSettings = new Menu("rset", "R 设置");
-                RSettings.Add(new MenuBool("user", "使用 R"));
-                RSettings.Add(new MenuSlider("hitr", "^- 若可击飞敌人 >=", 2, 0, 5));
-                RSettings.Add(new MenuSlider("hp", "^- 若队友血量% <=", 20, 0, 100));
-                RSettings.Add(new MenuBool("autor", "受致命伤害前R"));
-                RSettings.Add(new MenuKeyBind("semir", "半自动R最低血量队友", Keys.T, KeyBindType.Press));
-                ComboMenu.Add(RSettings);
-                ComboMenu.Add(new MenuBool("support", "辅助模式", false));
+                RootMenu.Add(WE);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+                    DrawMenu.Add(new MenuBool("drawpix", "显示 皮克斯位置"));
+                    DrawMenu.Add(new MenuBool("pixranges", "显示 与皮克斯距离"));
+                }
+                RootMenu.Add(DrawMenu);
 
+                EvadeMenu = new Menu("wset", "护盾设置");
+                {
+                    var First = new Menu("first", "技能列表");
+                    SpellBlocking.EvadeManager.Attach(First);
+                    SpellBlocking.EvadeOthers.Attach(First);
+                    SpellBlocking.EvadeTargetManager.Attach(First);
+                    EvadeMenu.Add(First);
+
+
+                }
+                RootMenu.Add(EvadeMenu);
+                KillstealMenu = new Menu("killsteal", "抢人头");
+                {
+                    KillstealMenu.Add(new MenuBool("ksq", "使用 Q"));
+                    KillstealMenu.Add(new MenuBool("kse", "使用 E"));
+                    KillstealMenu.Add(new MenuBool("kseq", "使用 EQ"));
+                }
+                RootMenu.Add(KillstealMenu);
+                FarmMenu = new Menu("flee", "逃跑设定");
+                {
+                    FarmMenu.Add(new MenuKeyBind("fleekey", "逃跑按键", Keys.Z, KeyBindType.Press));
+
+                }
+                RootMenu.Add(FarmMenu);
             }
-
-            RootMenu.Add(ComboMenu);
-            HarassMenu = new Menu("harass", "骚扰");
+            else
             {
-                HarassMenu.Add(new MenuSlider("mana", "蓝量管理", 30, 0, 100));
-                HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                HarassMenu.Add(new MenuBool("usee", "使用 E"));
-                HarassMenu.Add(new MenuBool("useeq", "使用EQ延长攻击"));
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("useeq", "Use E > Q Extended in Combo", false));
+                    var WSettings = new Menu("wset", "W Settings");
+                    WSettings.Add(new MenuBool("usew", "Use W in Combo"));
+                    var EnemySet = new Menu("enemy", "Enemy Settings");
+                    EnemySet.Add(new MenuSeparator("meow", "0 - Disabled"));
+                    EnemySet.Add(new MenuSeparator("meowmeow", "1 - Lowest, 5 - Biggest Priority"));
+                    foreach (var target in GameObjects.EnemyHeroes)
+                    {
 
+                        EnemySet.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " Priority: ", 1, 0, 5));
+
+                    }
+                    var AllySet = new Menu("ally", "Ally Settings");
+                    AllySet.Add(new MenuSeparator("meow", "0 - Disabled"));
+                    AllySet.Add(new MenuSeparator("meowmeow", "1 - Lowest, 5 - Biggest Priority"));
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+
+                        AllySet.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " Priority: ", 1, 0, 5));
+
+                    }
+                    ComboMenu.Add(WSettings);
+                    WSettings.Add(EnemySet);
+                    WSettings.Add(AllySet);
+
+                    ComboMenu.Add(new MenuList<string>("emode", "E Mode on Enemy", new[] { "Always", "Logic", "Never" }));
+                    var RSettings = new Menu("rset", "R Settings");
+                    RSettings.Add(new MenuBool("user", "Use R in Combo"));
+                    RSettings.Add(new MenuSlider("hitr", "^- if Knocks Up X Enemies", 2, 0, 5));
+                    RSettings.Add(new MenuSlider("hp", "^- if Ally is Lower than X Health", 20, 0, 100));
+                    RSettings.Add(new MenuBool("autor", "Auto R if Incoming Damage will Kill"));
+                    RSettings.Add(new MenuKeyBind("semir", "Semi-R on Lowest Health Ally", Keys.T, KeyBindType.Press));
+                    ComboMenu.Add(RSettings);
+                    ComboMenu.Add(new MenuBool("support", "Support Mode", false));
+
+                }
+
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("harass", "Harass");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "Mana Manager", 30, 0, 100));
+                    HarassMenu.Add(new MenuBool("useq", "Harass with Q"));
+                    HarassMenu.Add(new MenuBool("usee", "Harass with E"));
+                    HarassMenu.Add(new MenuBool("useeq", "Harass with E > Q Extended"));
+
+                }
+                RootMenu.Add(HarassMenu);
+                var WE = new Menu("we", "W > E Settings");
+                WE.Add(new MenuKeyBind("key", "W > E Key", Keys.Z, KeyBindType.Press));
+
+                WE.Add(new MenuSeparator("meow", "0 - Disabled"));
+                WE.Add(new MenuSeparator("meowmeow", "1 - Lowest, 5 - Biggest Priority"));
+                foreach (var target in GameObjects.AllyHeroes)
+                {
+
+                    WE.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " Priority: ", 1, 0, 5));
+
+                }
+                RootMenu.Add(WE);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+                    DrawMenu.Add(new MenuBool("drawpix", "Draw Pix Position"));
+                    DrawMenu.Add(new MenuBool("pixranges", "Draw Ranges from Pix"));
+ 
+                }
+                RootMenu.Add(DrawMenu);
+
+                EvadeMenu = new Menu("wset", "Shielding");
+                {
+                    var First = new Menu("first", "Spells Detector");
+                    SpellBlocking.EvadeManager.Attach(First);
+                    SpellBlocking.EvadeOthers.Attach(First);
+                    SpellBlocking.EvadeTargetManager.Attach(First);
+                    EvadeMenu.Add(First);
+
+                }
+                RootMenu.Add(EvadeMenu);
+                KillstealMenu = new Menu("killsteal", "Killsteal");
+                {
+                    KillstealMenu.Add(new MenuBool("ksq", "Killsteal with Q"));
+                    KillstealMenu.Add(new MenuBool("kse", "Killsteal with E"));
+                    KillstealMenu.Add(new MenuBool("kseq", "Killsteal with E > Q"));
+                }
+                RootMenu.Add(KillstealMenu);
+                FarmMenu = new Menu("flee", "Flee");
+                {
+                    FarmMenu.Add(new MenuKeyBind("fleekey", "Fleey Key", Keys.G, KeyBindType.Press));
+
+                }
+                RootMenu.Add(FarmMenu);
             }
-            RootMenu.Add(HarassMenu);
-            var WE = new Menu("we", "WE 设定");
-            WE.Add(new MenuKeyBind("key", "WE连招", Keys.G, KeyBindType.Press));
 
-            WE.Add(new MenuSeparator("meow", "0 为禁用"));
-            WE.Add(new MenuSeparator("meowmeow", "1 优先最低,5 最高"));
-            foreach (var target in GameObjects.AllyHeroes)
-            {
-
-                WE.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
-
-            }
-            RootMenu.Add(WE);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
-                DrawMenu.Add(new MenuBool("drawpix", "显示 皮克斯位置"));
-                DrawMenu.Add(new MenuBool("pixranges", "显示 与皮克斯距离"));
-            }
-            RootMenu.Add(DrawMenu);
-
-            EvadeMenu = new Menu("wset", "护盾设置");
-            {
-                var First = new Menu("first", "技能列表");
-                SpellBlocking.EvadeManager.Attach(First);
-                SpellBlocking.EvadeOthers.Attach(First);
-                SpellBlocking.EvadeTargetManager.Attach(First);            
-                EvadeMenu.Add(First);
-
-
-            }
-            RootMenu.Add(EvadeMenu);
-            KillstealMenu = new Menu("killsteal", "抢人头");
-            {
-                KillstealMenu.Add(new MenuBool("ksq", "使用 Q"));
-                KillstealMenu.Add(new MenuBool("kse", "使用 E"));
-                KillstealMenu.Add(new MenuBool("kseq", "使用 EQ"));
-            }
-            RootMenu.Add(KillstealMenu);
-            FarmMenu = new Menu("flee", "逃跑设定");
-            {
-                FarmMenu.Add(new MenuKeyBind("fleekey", "逃跑按键", Keys.Z, KeyBindType.Press));
-
-            }
-            RootMenu.Add(FarmMenu);
             RootMenu.Attach();
         }
 

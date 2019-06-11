@@ -17,6 +17,7 @@ namespace SupportAIO.Champions
 {
     class Nami : Champion
     {
+        private int language;
 
         internal Nami()
         {
@@ -258,66 +259,135 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuList<string>("wmode", "W弹射模式:",
-                    new[] { "不使用", "队友和我之间", "队友和目标之间" }));
-                ComboMenu.Add(new MenuBool("usee", "使用 E"));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuSlider("hitr", "^- 可击中>=", 2, 1, 5));
-                ComboMenu.Add(new MenuSlider("allyr", "^- 附近友军>=", 1, 1, 4));
-                ComboMenu.Add(new MenuKeyBind("semir", "半自动R", Keys.T, KeyBindType.Press));
-
-                ComboMenu.Add(new MenuBool("support", "辅助模式"));
-
-            }
-
-            RootMenu.Add(ComboMenu);
-            HarassMenu = new Menu("misc", "自动");
-            {
-                HarassMenu.Add(new MenuBool("autoq", "自动Q被控目标"));
-
-
-            }
-
-            RootMenu.Add(HarassMenu);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
-            }
-            RootMenu.Add(DrawMenu);
-            FarmMenu = new Menu("white", "W 设定");
-            {
-                FarmMenu.Add(new MenuBool("enable", "自动W"));
-                FarmMenu.Add(new MenuSeparator("meow", "优先级 0为关闭"));
-                FarmMenu.Add(new MenuSeparator("meowmeow", "1 最低, 5 最高"));
-                foreach (var target in GameObjects.AllyHeroes)
+                ComboMenu = new Menu("combo", "连招");
                 {
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuList<string>("wmode", "W弹射模式:",
+                        new[] { "不使用", "队友和我之间", "队友和目标之间" }));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E"));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuSlider("hitr", "^- 可击中>=", 2, 1, 5));
+                    ComboMenu.Add(new MenuSlider("allyr", "^- 附近友军>=", 1, 1, 4));
+                    ComboMenu.Add(new MenuKeyBind("semir", "半自动R", Keys.T, KeyBindType.Press));
 
-                    FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
-                    FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "hp", "^- 血量%: ", 50, 0,
-                        100));
+                    ComboMenu.Add(new MenuBool("support", "辅助模式"));
+
                 }
 
-            }
-            RootMenu.Add(FarmMenu);
-            KillstealMenu = new Menu("ewhite", "E 白名单");
-            {
-
-                foreach (var target in GameObjects.AllyHeroes)
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("misc", "自动");
                 {
-
-                    KillstealMenu.Add(new MenuBool(target.CharacterName.ToLower(), "启用E: " + target.CharacterName));
+                    HarassMenu.Add(new MenuBool("autoq", "自动Q被控目标"));
 
 
                 }
-            }
-            RootMenu.Add(KillstealMenu);
 
+                RootMenu.Add(HarassMenu);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+                }
+                RootMenu.Add(DrawMenu);
+                FarmMenu = new Menu("white", "W 设定");
+                {
+                    FarmMenu.Add(new MenuBool("enable", "自动W"));
+                    FarmMenu.Add(new MenuSeparator("meow", "优先级 0为关闭"));
+                    FarmMenu.Add(new MenuSeparator("meowmeow", "1 最低, 5 最高"));
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+
+                        FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " 优先级: ", 1, 0, 5));
+                        FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "hp", "^- 血量%: ", 50, 0,
+                            100));
+                    }
+
+                }
+                RootMenu.Add(FarmMenu);
+                KillstealMenu = new Menu("ewhite", "E 白名单");
+                {
+
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+
+                        KillstealMenu.Add(new MenuBool(target.CharacterName.ToLower(), "启用E: " + target.CharacterName));
+
+
+                    }
+                }
+                RootMenu.Add(KillstealMenu);
+
+                
+            }
+            else
+            {
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuList<string>("wmode", "W On Target Mode:",
+                        new[] { "Never", "If Bounces to Ally / Me", "Bounce from Ally to Target" }));
+                    ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
+                    ComboMenu.Add(new MenuSlider("hitr", "^- if Hits X", 2, 1, 5));
+                    ComboMenu.Add(new MenuSlider("allyr", "^- if X Nearby Allies", 1, 1, 4));
+                    ComboMenu.Add(new MenuKeyBind("semir", "Semi-R Key", Keys.T, KeyBindType.Press));
+
+                    ComboMenu.Add(new MenuBool("support", "Support Mode"));
+
+                }
+
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("misc", "Misc.");
+                {
+                    HarassMenu.Add(new MenuBool("autoq", "Auto Q on CC"));
+
+
+                }
+
+                RootMenu.Add(HarassMenu);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+                }
+                RootMenu.Add(DrawMenu);
+                FarmMenu = new Menu("white", "W Settings");
+                {
+                    FarmMenu.Add(new MenuBool("enable", "Use Auto W"));
+                    FarmMenu.Add(new MenuSeparator("meow", "Priority 0 - Disabled"));
+                    FarmMenu.Add(new MenuSeparator("meowmeow", "1 - Lowest, 5 - Biggest Priority"));
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+
+                        FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "priority", target.CharacterName + " Priority: ", 1, 0, 5));
+                        FarmMenu.Add(new MenuSlider(target.CharacterName.ToLower() + "hp", "^- Health Percent: ", 50, 0,
+                            100));
+                    }
+
+                }
+                RootMenu.Add(FarmMenu);
+                KillstealMenu = new Menu("ewhite", "E WhiteList");
+                {
+
+                    foreach (var target in GameObjects.AllyHeroes)
+                    {
+
+                        KillstealMenu.Add(new MenuBool(target.CharacterName.ToLower(), "Enable: " + target.CharacterName));
+
+
+                    }
+                }
+                RootMenu.Add(KillstealMenu);
+            }
             RootMenu.Attach();
         }
 

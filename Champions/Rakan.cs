@@ -19,7 +19,7 @@ namespace SupportAIO.Champions
     {
         private int delayyyyyyyyy;
         private int meowdelay;
-
+        private int language;
 
         internal Rakan()
         {
@@ -437,60 +437,121 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-
-
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("usew", "使用 W"));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuSlider("hitr", "若附近敌人 >=", 2, 1, 5));
-                ComboMenu.Add(new MenuSlider("hp", "若敌人血量 %<=", 50, 1, 100));
-                ComboMenu.Add(new MenuKeyBind("engage", "突进EW连招", Keys.T, KeyBindType.Press));
-                ComboMenu.Add(new MenuKeyBind("wflash", "W闪!", Keys.G, KeyBindType.Press));
+
+                ComboMenu = new Menu("combo", "连招");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("usew", "使用 W"));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuSlider("hitr", "若附近敌人 >=", 2, 1, 5));
+                    ComboMenu.Add(new MenuSlider("hp", "若敌人血量 %<=", 50, 1, 100));
+                    ComboMenu.Add(new MenuKeyBind("engage", "突进EW连招", Keys.T, KeyBindType.Press));
+                    ComboMenu.Add(new MenuKeyBind("wflash", "W闪!", Keys.G, KeyBindType.Press));
+
+                }
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("harass", "骚扰");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "蓝量管理", 40, 1, 100));
+                    HarassMenu.Add(new MenuBool("useq", "使用 Q"));
+                    HarassMenu.Add(new MenuBool("logic", "使用 E - W - E 骚扰逻辑"));
+
+                }
+                RootMenu.Add(HarassMenu);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                    DrawMenu.Add(new MenuBool("drawflee", "显示逃跑半径"));
+                    DrawMenu.Add(new MenuBool("drawrange", "显示EW突进距离"));
+                    DrawMenu.Add(new MenuBool("wflash", "显示W闪距离"));
+                }
+                FarmMenu = new Menu("flee", "逃跑");
+                {
+                    FarmMenu.Add(new MenuKeyBind("key", "逃跑按键", Keys.Z, KeyBindType.Press));
+                    FarmMenu.Add(new MenuBool("user", "使用 R", false));
+                    FarmMenu.Add(new MenuBool("usee", "使用 E"));
+
+                }
+
+                RootMenu.Add(HarassMenu);
+                RootMenu.Add(DrawMenu);
+                RootMenu.Add(FarmMenu);
+                EvadeMenu = new Menu("wset", "套盾逻辑");
+                {
+                    var First = new Menu("first", "技能列表");
+                    SpellBlocking.EvadeManager.Attach(First);
+                    SpellBlocking.EvadeOthers.Attach(First);
+                    SpellBlocking.EvadeTargetManager.Attach(First);
+
+                    EvadeMenu.Add(First);
+
+                }
+
+                RootMenu.Add(EvadeMenu);
 
             }
-            RootMenu.Add(ComboMenu);
-            HarassMenu = new Menu("harass", "骚扰");
+            else
             {
-                HarassMenu.Add(new MenuSlider("mana", "蓝量管理", 40, 1, 100));
-                HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                HarassMenu.Add(new MenuBool("logic", "使用 E - W - E 骚扰逻辑"));
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
+                    ComboMenu.Add(new MenuSlider("hitr", "If X Near Enemies", 2, 1, 5));
+                    ComboMenu.Add(new MenuSlider("hp", "If Enemy X Health", 50, 1, 100));
+                    ComboMenu.Add(new MenuKeyBind("engage", "Engage E - W Combo", Keys.T, KeyBindType.Press));
+                    ComboMenu.Add(new MenuKeyBind("wflash", "W - Flash", Keys.G, KeyBindType.Press));
 
-            }
-            RootMenu.Add(HarassMenu);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-                DrawMenu.Add(new MenuBool("drawflee", "显示逃跑半径"));
-                DrawMenu.Add(new MenuBool("drawrange", "显示EW突进距离"));
-                DrawMenu.Add(new MenuBool("wflash", "显示W闪距离"));
-            }
-            FarmMenu = new Menu("flee", "逃跑");
-            {
-                FarmMenu.Add(new MenuKeyBind("key", "逃跑按键", Keys.Z, KeyBindType.Press));
-                FarmMenu.Add(new MenuBool("user", "使用 R", false));
-                FarmMenu.Add(new MenuBool("usee", "使用 E"));
+                }
+                RootMenu.Add(ComboMenu);
+                HarassMenu = new Menu("harass", "Harass");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "Mana Manager", 40, 1, 100));
+                    HarassMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    HarassMenu.Add(new MenuBool("logic", "Use E - W - E Harass Logic"));
 
-            }
-            
-            RootMenu.Add(HarassMenu);
-            RootMenu.Add(DrawMenu);
-            RootMenu.Add(FarmMenu);
-            EvadeMenu = new Menu("wset", "套盾逻辑");
-            {
-                var First = new Menu("first", "技能列表");
-                SpellBlocking.EvadeManager.Attach(First);
-                SpellBlocking.EvadeOthers.Attach(First);
-                SpellBlocking.EvadeTargetManager.Attach(First);
-               
-                EvadeMenu.Add(First);
+                }
+                RootMenu.Add(HarassMenu);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawflee", "Draw Flee Radius"));
+                    DrawMenu.Add(new MenuBool("drawrange", "Draw Engage Range"));
+                    DrawMenu.Add(new MenuBool("wflash", "Draw W-Flash"));
+                }
+                FarmMenu = new Menu("flee", "Flee");
+                {
+                    FarmMenu.Add(new MenuKeyBind("key", "Flee Key", Keys.Z, KeyBindType.Press));
+                    FarmMenu.Add(new MenuBool("user", "Flee with R", false));
+                    FarmMenu.Add(new MenuBool("usee", "Flee with E"));
 
-            }
+                }
 
-            RootMenu.Add(EvadeMenu);
+                RootMenu.Add(HarassMenu);
+                RootMenu.Add(DrawMenu);
+                RootMenu.Add(FarmMenu);
+                EvadeMenu = new Menu("wset", "Shielding");
+                {
+                    var First = new Menu("first", "Spells Detector");
+                    SpellBlocking.EvadeManager.Attach(First);
+                    SpellBlocking.EvadeOthers.Attach(First);
+                    SpellBlocking.EvadeTargetManager.Attach(First);
+
+                    EvadeMenu.Add(First);
+
+                }
+
+                RootMenu.Add(EvadeMenu);
+            }
             RootMenu.Attach();
         }
 

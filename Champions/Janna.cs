@@ -18,6 +18,8 @@ namespace SupportAIO.Champions
 {
     class Janna : Champion
     {
+        private int language;
+
         internal Janna()
         {
             this.SetSpells();
@@ -165,49 +167,100 @@ namespace SupportAIO.Champions
         protected override void SetMenu()
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
-            RootMenu.Add(new MenuKeyBind("insec", "回旋吹", Keys.T, KeyBindType.Press));
 
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
 
-            ComboMenu = new Menu("combo", "连招");
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("usew", "使用 W"));
-                ComboMenu.Add(new MenuBool("support", "辅助模式"));
-            }
-            RootMenu.Add(ComboMenu);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
-                DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
 
-            }
-            RootMenu.Add(DrawMenu);
+                RootMenu.Add(new MenuKeyBind("insec", "回旋吹", Keys.T, KeyBindType.Press));
 
-            EvadeMenu = new Menu("wset", "E设定");
-            {
-                var First = new Menu("first", "技能列表");
-                SpellBlocking.EvadeManager.Attach(First);
-                SpellBlocking.EvadeOthers.Attach(First);
-                SpellBlocking.EvadeTargetManager.Attach(First);
-                var test = new Menu("Misc.E.Spell.Menu", "用E增加队友攻击");
-                foreach (var spell in
-                    GameObjects.AllyHeroes.Where(h => !h.IsMe)
-                        .SelectMany(
-                            hero => DamageBoostDatabase.Spells.Where(s => s.Champion == hero.CharacterName)))
+
+                ComboMenu = new Menu("combo", "连招");
                 {
-                    test.Add(new MenuBool("Misc.E.Spell." + spell.Spell, spell.Champion + " " + spell.Slot));
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("usew", "使用 W"));
+                    ComboMenu.Add(new MenuBool("support", "辅助模式"));
                 }
-                EvadeMenu.Add(test);
-                EvadeMenu.Add(First);
-                //var zlib = new Menu("zlib", "ZLib");
+                RootMenu.Add(ComboMenu);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 距离"));
+                    DrawMenu.Add(new MenuBool("draww", "显示 W 距离"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
 
-                //SupportAIO.ZLib.Attach(EvadeMenu);
+                }
+                RootMenu.Add(DrawMenu);
+
+                EvadeMenu = new Menu("wset", "E设定");
+                {
+                    var First = new Menu("first", "技能列表");
+                    SpellBlocking.EvadeManager.Attach(First);
+                    SpellBlocking.EvadeOthers.Attach(First);
+                    SpellBlocking.EvadeTargetManager.Attach(First);
+                    var test = new Menu("Misc.E.Spell.Menu", "用E增加队友攻击");
+                    foreach (var spell in
+                        GameObjects.AllyHeroes.Where(h => !h.IsMe)
+                            .SelectMany(
+                                hero => DamageBoostDatabase.Spells.Where(s => s.Champion == hero.CharacterName)))
+                    {
+                        test.Add(new MenuBool("Misc.E.Spell." + spell.Spell, spell.Champion + " " + spell.Slot));
+                    }
+                    EvadeMenu.Add(test);
+                    EvadeMenu.Add(First);
+                    //var zlib = new Menu("zlib", "ZLib");
+
+                    //SupportAIO.ZLib.Attach(EvadeMenu);
 
 
+                }
+                RootMenu.Add(EvadeMenu);
             }
-            RootMenu.Add(EvadeMenu);
+
+            else
+            {
+                RootMenu.Add(new MenuKeyBind("insec", "Insec Key", Keys.T, KeyBindType.Press));
+
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    ComboMenu.Add(new MenuBool("support", "Support Mode"));
+                }
+                RootMenu.Add(ComboMenu);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("draww", "Draw W Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+
+                }
+                RootMenu.Add(DrawMenu);
+
+                EvadeMenu = new Menu("wset", "Shielding");
+                {
+                    var First = new Menu("first", "Spells Detector");
+                    SpellBlocking.EvadeManager.Attach(First);
+                    SpellBlocking.EvadeOthers.Attach(First);
+                    SpellBlocking.EvadeTargetManager.Attach(First);
+                    var test = new Menu("Misc.E.Spell.Menu", "Boost Ally Damage on Spells");
+                    foreach (var spell in
+                        GameObjects.AllyHeroes.Where(h => !h.IsMe)
+                            .SelectMany(
+                                hero => DamageBoostDatabase.Spells.Where(s => s.Champion == hero.CharacterName)))
+                    {
+                        test.Add(new MenuBool("Misc.E.Spell." + spell.Spell, spell.Champion + " " + spell.Slot));
+                    }
+                    EvadeMenu.Add(test);
+                    EvadeMenu.Add(First);
+
+                }
+                RootMenu.Add(EvadeMenu);
+            }
 
             RootMenu.Attach();
         }

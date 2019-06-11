@@ -17,6 +17,7 @@ namespace SupportAIO.Champions
 {
     class Leona : Champion
     {
+        private int language;
 
         internal Leona()
         {
@@ -235,48 +236,93 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("eq", "^- 仅当E中了"));
-                ComboMenu.Add(new MenuBool("usew", "使用 W"));
-                ComboMenu.Add(new MenuBool("usee", "使用 E"));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuSlider("hitr", "^- 可击中>=", 2, 1, 5));
-                ComboMenu.Add(new MenuKeyBind("semir", "半自动 R", Keys.T, KeyBindType.Press));
 
-
-            }
-            RootMenu.Add(ComboMenu);
-            var HarassMenu = new Menu("harass", "骚扰");
-            {
-                HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                HarassMenu.Add(new MenuBool("eq", "^- 仅当E中了"));
-                HarassMenu.Add(new MenuBool("usew", "使用 W"));
-                HarassMenu.Add(new MenuBool("usee", "使用 E"));
-
-
-            }
-            RootMenu.Add(HarassMenu);
-            WhiteList = new Menu("whitelist", "E 白名单");
-            {
-                foreach (var target in GameObjects.EnemyHeroes)
+                ComboMenu = new Menu("combo", "连招");
                 {
-                    WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "启用: " + target.CharacterName));
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("eq", "^- 仅当E中了"));
+                    ComboMenu.Add(new MenuBool("usew", "使用 W"));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E"));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuSlider("hitr", "^- 可击中>=", 2, 1, 5));
+                    ComboMenu.Add(new MenuKeyBind("semir", "半自动 R", Keys.T, KeyBindType.Press));
+
+
+                }
+                RootMenu.Add(ComboMenu);
+                var HarassMenu = new Menu("harass", "骚扰");
+                {
+                    HarassMenu.Add(new MenuBool("useq", "使用 Q"));
+                    HarassMenu.Add(new MenuBool("eq", "^- 仅当E中了"));
+                    HarassMenu.Add(new MenuBool("usew", "使用 W"));
+                    HarassMenu.Add(new MenuBool("usee", "使用 E"));
+
+
+                }
+                RootMenu.Add(HarassMenu);
+                WhiteList = new Menu("whitelist", "E 白名单");
+                {
+                    foreach (var target in GameObjects.EnemyHeroes)
+                    {
+                        WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "启用: " + target.CharacterName));
+                    }
+                }
+                RootMenu.Add(WhiteList);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+
                 }
             }
-            RootMenu.Add(WhiteList);
-            DrawMenu = new Menu("drawings", "显示");
+            else
             {
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("eq", "Use Q only if E Hits"));
+                    ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
+                    ComboMenu.Add(new MenuSlider("hitr", "^- if Hits", 2, 1, 5));
+                    ComboMenu.Add(new MenuKeyBind("semir", "Semi-R Key", Keys.T, KeyBindType.Press));
 
+
+                }
+                RootMenu.Add(ComboMenu);
+                var HarassMenu = new Menu("harass", "Harass");
+                {
+                    HarassMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    HarassMenu.Add(new MenuBool("eq", "Use Q only if E Hits"));
+                    HarassMenu.Add(new MenuBool("usew", "Use W in Combo"));
+                    HarassMenu.Add(new MenuBool("usee", "Use E in Combo"));
+
+
+                }
+                RootMenu.Add(HarassMenu);
+                WhiteList = new Menu("whitelist", "E Whitelist");
+                {
+                    foreach (var target in GameObjects.EnemyHeroes)
+                    {
+                        WhiteList.Add(new MenuBool(target.CharacterName.ToLower(), "Enable: " + target.CharacterName));
+                    }
+                }
+                RootMenu.Add(WhiteList);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+
+                }
+                RootMenu.Add(DrawMenu);
             }
             RootMenu.Add(DrawMenu);
-
-
-
-            RootMenu.Attach();
         }
 
         protected override void SetSpells()

@@ -18,6 +18,8 @@ namespace SupportAIO.Champions
 {
     class Zilean : Champion
     {
+        private int language;
+
         internal Zilean()
         {
             this.SetSpells();
@@ -272,56 +274,112 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-
-
-            ComboMenu = new Menu("combo", "连招");
+            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
+            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            if (language != 1)
             {
-                ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                ComboMenu.Add(new MenuBool("usew", "使用 W 重置Q"));
-                ComboMenu.Add(new MenuBool("usee", "使用 E"));
-                ComboMenu.Add(new MenuBool("slow", "自动E被减速队友"));
-                ComboMenu.Add(new MenuBool("user", "使用 R"));
-                ComboMenu.Add(new MenuList<string>("rusage", "R 模式", new[] { "受到致命伤害", "低血量" }));
-                ComboMenu.Add(new MenuSlider("hitr", "若血量% <= (低血量模式)", 20, 1, 100));
 
-                ComboMenu.Add(new MenuBool("support", "辅助模式"));
+                ComboMenu = new Menu("combo", "连招");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "使用 Q"));
+                    ComboMenu.Add(new MenuBool("usew", "使用 W 重置Q"));
+                    ComboMenu.Add(new MenuBool("usee", "使用 E"));
+                    ComboMenu.Add(new MenuBool("slow", "自动E被减速队友"));
+                    ComboMenu.Add(new MenuBool("user", "使用 R"));
+                    ComboMenu.Add(new MenuList<string>("rusage", "R 模式", new[] { "受到致命伤害", "低血量" }));
+                    ComboMenu.Add(new MenuSlider("hitr", "若血量% <= (低血量模式)", 20, 1, 100));
+
+                    ComboMenu.Add(new MenuBool("support", "辅助模式"));
+                }
+                RootMenu.Add(ComboMenu);
+
+
+                HarassMenu = new Menu("harass", "骚扰");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "蓝量控制", 50, 1, 100));
+
+                    HarassMenu.Add(new MenuBool("useq", "使用 Q"));
+                    HarassMenu.Add(new MenuBool("usew", "使用 W 重置Q"));
+                }
+                RootMenu.Add(HarassMenu);
+
+                KillstealMenu = new Menu("misc", "自动");
+                {
+                    KillstealMenu.Add(new MenuBool("autoq", "自动Q被控目标"));
+                }
+                RootMenu.Add(KillstealMenu);
+
+                FarmMenu = new Menu("farming", "清线");
+                {
+                    FarmMenu.Add(new MenuBool("useq", "使用 Q"));
+                    FarmMenu.Add(new MenuSlider("hitq", "^- 可击中小兵>=", 3, 1, 6));
+                    FarmMenu.Add(new MenuBool("usew", "使用 W 重置Q"));
+                }
+                RootMenu.Add(FarmMenu);
+                DrawMenu = new Menu("drawings", "显示");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "显示 Q 范围"));
+                    DrawMenu.Add(new MenuBool("drawe", "显示 E 范围"));
+                    DrawMenu.Add(new MenuBool("drawr", "显示 R 范围"));
+
+                }
+                RootMenu.Add(DrawMenu);
+
+                RootMenu.Add(new MenuKeyBind("qwq", "QWQ 到鼠标", Keys.G, KeyBindType.Press));
+                RootMenu.Add(new MenuKeyBind("flee", "逃跑按键", Keys.Z, KeyBindType.Press));
             }
-            RootMenu.Add(ComboMenu);
 
-
-            HarassMenu = new Menu("harass", "骚扰");
+            else
             {
-                HarassMenu.Add(new MenuSlider("mana", "蓝量控制", 50, 1, 100));
+                ComboMenu = new Menu("combo", "Combo");
+                {
+                    ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    ComboMenu.Add(new MenuBool("usew", "Use W for Q Reset"));
+                    ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
+                    ComboMenu.Add(new MenuBool("slow", "Use Auto E on Slowed Ally"));
+                    ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
+                    ComboMenu.Add(new MenuList<string>("rusage", "R Usage", new[] { "If Incoming Damage Kills", "At X Health" }, 0));
+                    ComboMenu.Add(new MenuSlider("hitr", "If X Health <= (Health Mode)", 20, 1, 100));
 
-                HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                HarassMenu.Add(new MenuBool("usew", "使用 W 重置Q"));
-            }
-            RootMenu.Add(HarassMenu);
-            
-            KillstealMenu = new Menu("misc", "自动");
-            {
-                KillstealMenu.Add(new MenuBool("autoq", "自动Q被控目标"));
-            }
-            RootMenu.Add(KillstealMenu);
+                    ComboMenu.Add(new MenuBool("support", "Support Mode"));
+                }
+                RootMenu.Add(ComboMenu);
 
-            FarmMenu = new Menu("farming", "清线");
-            {
-                FarmMenu.Add(new MenuBool("useq", "使用 Q"));
-                FarmMenu.Add(new MenuSlider("hitq", "^- 可击中小兵>=", 3, 1, 6));
-                FarmMenu.Add(new MenuBool("usew", "使用 W 重置Q"));
-            }
-            RootMenu.Add(FarmMenu);
-            DrawMenu = new Menu("drawings", "显示");
-            {
-                DrawMenu.Add(new MenuBool("drawq", "显示 Q 范围"));
-                DrawMenu.Add(new MenuBool("drawe", "显示 E 范围"));
-                DrawMenu.Add(new MenuBool("drawr", "显示 R 范围"));
 
-            }
-            RootMenu.Add(DrawMenu);
+                HarassMenu = new Menu("harass", "Harass");
+                {
+                    HarassMenu.Add(new MenuSlider("mana", "Mana Percent", 50, 1, 100));
 
-            RootMenu.Add(new MenuKeyBind("qwq", "QWQ 到鼠标", Keys.G, KeyBindType.Press));
-            RootMenu.Add(new MenuKeyBind("flee", "逃跑按键", Keys.Z, KeyBindType.Press));
+                    HarassMenu.Add(new MenuBool("useq", "Use Q in Combo"));
+                    HarassMenu.Add(new MenuBool("usew", "Use W for Q Reset"));
+                }
+                RootMenu.Add(HarassMenu);
+
+                KillstealMenu = new Menu("misc", "Misc.");
+                {
+                    KillstealMenu.Add(new MenuBool("autoq", "Auto Q on CC"));
+                }
+                RootMenu.Add(KillstealMenu);
+
+                FarmMenu = new Menu("farming", "Farming");
+                {
+                    FarmMenu.Add(new MenuBool("useq", "Use Q to Farm"));
+                    FarmMenu.Add(new MenuSlider("hitq", "^- if hits X", 3, 1, 6));
+                    FarmMenu.Add(new MenuBool("usew", "Use W to Reset Q"));
+                }
+                RootMenu.Add(FarmMenu);
+                DrawMenu = new Menu("drawings", "Drawings");
+                {
+                    DrawMenu.Add(new MenuBool("drawq", "Draw Q Range"));
+                    DrawMenu.Add(new MenuBool("drawe", "Draw E Range"));
+                    DrawMenu.Add(new MenuBool("drawr", "Draw R Range"));
+
+                }
+                RootMenu.Add(DrawMenu);
+                RootMenu.Add(new MenuKeyBind("qwq", "Q-W-Q to Mouse", Keys.T, KeyBindType.Press));
+                RootMenu.Add(new MenuKeyBind("flee", "Flee Key", Keys.Z, KeyBindType.Press));
+            }
             RootMenu.Attach();
         }
 
