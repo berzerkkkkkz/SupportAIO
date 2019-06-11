@@ -339,7 +339,7 @@ namespace SupportAIO.Champions
                     ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
                     ComboMenu.Add(new MenuBool("slow", "Use Auto E on Slowed Ally"));
                     ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
-                    ComboMenu.Add(new MenuList<string>("rusage", "R Usage", new[] { "If Incoming Damage Kills", "At X Health" }, 0));
+                    ComboMenu.Add(new MenuList<string>("rusage", "R Usage", new[] { "If Incoming Damage Kills", "At X Health" }));
                     ComboMenu.Add(new MenuSlider("hitr", "If X Health <= (Health Mode)", 20, 1, 100));
 
                     ComboMenu.Add(new MenuBool("support", "Support Mode"));
