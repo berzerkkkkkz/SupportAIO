@@ -479,8 +479,6 @@ namespace SupportAIO.Champions
                     FarmMenu.Add(new MenuBool("usee", "使用 E"));
 
                 }
-
-                RootMenu.Add(HarassMenu);
                 RootMenu.Add(DrawMenu);
                 RootMenu.Add(FarmMenu);
                 EvadeMenu = new Menu("wset", "套盾逻辑");
@@ -535,8 +533,6 @@ namespace SupportAIO.Champions
                     FarmMenu.Add(new MenuBool("usee", "Flee with E"));
 
                 }
-
-                RootMenu.Add(HarassMenu);
                 RootMenu.Add(DrawMenu);
                 RootMenu.Add(FarmMenu);
                 EvadeMenu = new Menu("wset", "Shielding");
