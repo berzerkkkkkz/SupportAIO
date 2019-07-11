@@ -761,9 +761,9 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuList("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
             RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
-            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            language = RootMenu.GetValue<MenuList>("language").Index;
             if (language != 1)
             {
 
@@ -795,7 +795,7 @@ namespace SupportAIO.Champions
                     WSettings.Add(EnemySet);
                     WSettings.Add(AllySet);
 
-                    ComboMenu.Add(new MenuList<string>("emode", "E 模式", new[] { "总是", "连招逻辑", "从不" }));
+                    ComboMenu.Add(new MenuList("emode", "E 模式", new[] { "总是", "连招逻辑", "从不" }));
                     var RSettings = new Menu("rset", "R 设置");
                     RSettings.Add(new MenuBool("user", "使用 R"));
                     RSettings.Add(new MenuSlider("hitr", "^- 若可击飞敌人 >=", 2, 0, 5));
@@ -895,7 +895,7 @@ namespace SupportAIO.Champions
                     WSettings.Add(EnemySet);
                     WSettings.Add(AllySet);
 
-                    ComboMenu.Add(new MenuList<string>("emode", "E Mode on Enemy", new[] { "Always", "Logic", "Never" }));
+                    ComboMenu.Add(new MenuList("emode", "E Mode on Enemy", new[] { "Always", "Logic", "Never" }));
                     var RSettings = new Menu("rset", "R Settings");
                     RSettings.Add(new MenuBool("user", "Use R in Combo"));
                     RSettings.Add(new MenuSlider("hitr", "^- if Knocks Up X Enemies", 2, 0, 5));

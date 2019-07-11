@@ -274,9 +274,9 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuList("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
             RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
-            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            language = RootMenu.GetValue<MenuList>("language").Index;
             if (language != 1)
             {
 
@@ -287,7 +287,7 @@ namespace SupportAIO.Champions
                     ComboMenu.Add(new MenuBool("usee", "使用 E"));
                     ComboMenu.Add(new MenuBool("slow", "自动E被减速队友"));
                     ComboMenu.Add(new MenuBool("user", "使用 R"));
-                    ComboMenu.Add(new MenuList<string>("rusage", "R 模式", new[] { "受到致命伤害", "低血量" }));
+                    ComboMenu.Add(new MenuList("rusage", "R 模式", new[] { "受到致命伤害", "低血量" }));
                     ComboMenu.Add(new MenuSlider("hitr", "若血量% <= (低血量模式)", 20, 1, 100));
 
                     ComboMenu.Add(new MenuBool("support", "辅助模式"));
@@ -339,7 +339,7 @@ namespace SupportAIO.Champions
                     ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
                     ComboMenu.Add(new MenuBool("slow", "Use Auto E on Slowed Ally"));
                     ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
-                    ComboMenu.Add(new MenuList<string>("rusage", "R Usage", new[] { "If Incoming Damage Kills", "At X Health" }));
+                    ComboMenu.Add(new MenuList("rusage", "R Usage", new[] { "If Incoming Damage Kills", "At X Health" }));
                     ComboMenu.Add(new MenuSlider("hitr", "If X Health <= (Health Mode)", 20, 1, 100));
 
                     ComboMenu.Add(new MenuBool("support", "Support Mode"));

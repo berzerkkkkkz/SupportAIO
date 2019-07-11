@@ -624,22 +624,22 @@ namespace SupportAIO.Champions
         {
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
-            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuList("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
             RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
-            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            language = RootMenu.GetValue<MenuList>("language").Index;
 
             if (language != 1)
             {
 
                 ComboMenu = new Menu("combo", "连招");
                 {
-                    ComboMenu.Add(new MenuList<string>("combomode", "连招模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+                    ComboMenu.Add(new MenuList("combomode", "连招模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
                     ComboMenu.Add(new MenuBool("useq", "使用 Q"));
-                    ComboMenu.Add(new MenuList<string>("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
+                    ComboMenu.Add(new MenuList("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
                     ComboMenu.Add(new MenuBool("usew", "使用 W"));
                     ComboMenu.Add(new MenuBool("usee", "使用 E"));
                     ComboMenu.Add(new MenuBool("user", "使用 R"));
-                    ComboMenu.Add(new MenuList<string>("rmode", "R 模式", new[] { "低血量", "可击杀" }));
+                    ComboMenu.Add(new MenuList("rmode", "R 模式", new[] { "低血量", "可击杀" }));
 
                     ComboMenu.Add(new MenuSlider("bounce", "R命中人数>=", 1, 1, 5));
                     ComboMenu.Add(new MenuBool("minion", "^- 计算弹射小兵"));
@@ -653,10 +653,10 @@ namespace SupportAIO.Champions
                     HarassMenu.Add(new MenuSlider("mana", "蓝量控制", 50, 1, 100));
 
                     HarassMenu.Add(new MenuBool("useq", "使用 Q"));
-                    HarassMenu.Add(new MenuList<string>("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
+                    HarassMenu.Add(new MenuList("qmode", "Q 模式", new[] { "总是", "仅当可晕" }));
                     HarassMenu.Add(new MenuBool("usew", "使用 W"));
                     HarassMenu.Add(new MenuBool("usee", "使用 E"));
-                    HarassMenu.Add(new MenuList<string>("harassmode", "骚扰模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+                    HarassMenu.Add(new MenuList("harassmode", "骚扰模式", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
 
                 }
                 RootMenu.Add(HarassMenu);
@@ -684,13 +684,13 @@ namespace SupportAIO.Champions
             {
                 ComboMenu = new Menu("combo", "Combo");
                 {
-                    ComboMenu.Add(new MenuList<string>("combomode", "Combo Mode", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+                    ComboMenu.Add(new MenuList("combomode", "Combo Mode", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
                     ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
-                    ComboMenu.Add(new MenuList<string>("qmode", "Q Mode", new[] { "Always", "Only Stun" }));
+                    ComboMenu.Add(new MenuList("qmode", "Q Mode", new[] { "Always", "Only Stun" }));
                     ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
                     ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
                     ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
-                    ComboMenu.Add(new MenuList<string>("rmode", "R Mode", new[] { "If X Health", "Only if Killable" }));
+                    ComboMenu.Add(new MenuList("rmode", "R Mode", new[] { "If X Health", "Only if Killable" }));
 
                     ComboMenu.Add(new MenuSlider("bounce", "Use R if Bounces On X Targets", 1, 1, 5));
                     ComboMenu.Add(new MenuBool("minion", "^- Include Minions for Bounce"));
@@ -704,10 +704,10 @@ namespace SupportAIO.Champions
                     HarassMenu.Add(new MenuSlider("mana", "Mana Percent", 50, 1, 100));
 
                     HarassMenu.Add(new MenuBool("useq", "Use Q in Harass"));
-                    HarassMenu.Add(new MenuList<string>("qmode", "Q Mode", new[] { "Always", "Only Stun" }));
+                    HarassMenu.Add(new MenuList("qmode", "Q Mode", new[] { "Always", "Only Stun" }));
                     HarassMenu.Add(new MenuBool("usew", "Use W in Combo"));
                     HarassMenu.Add(new MenuBool("usee", "Use E in Combo"));
-                    HarassMenu.Add(new MenuList<string>("harassmode", "Harass Mode", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
+                    HarassMenu.Add(new MenuList("harassmode", "Harass Mode", new[] { "E-Q-W", "E-W-Q", "W-E-Q", "W-Q-E" }));
 
                 }
                 RootMenu.Add(HarassMenu);

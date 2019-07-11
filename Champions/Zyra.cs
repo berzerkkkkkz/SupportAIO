@@ -353,20 +353,20 @@ namespace SupportAIO.Champions
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
 
-            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuList("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
             RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
-            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            language = RootMenu.GetValue<MenuList>("language").Index;
             if (language != 1)
             {
 
                 ComboMenu = new Menu("combo", "连招");
                 {
-                    ComboMenu.Add(new MenuList<string>("mode", "连招模式", new[] { "Q > W > R > E > W", "E > W > R > Q > W" }));
+                    ComboMenu.Add(new MenuList("mode", "连招模式", new[] { "Q > W > R > E > W", "E > W > R > Q > W" }));
                     ComboMenu.Add(new MenuBool("useq", "使用 Q"));
                     ComboMenu.Add(new MenuBool("usew", "使用 W"));
                     ComboMenu.Add(new MenuBool("usee", "使用 E"));
                     ComboMenu.Add(new MenuBool("user", "使用 R"));
-                    ComboMenu.Add(new MenuList<string>("rusage", "R 模式", new[] { "可击中多个英雄", "连招可击杀" }));
+                    ComboMenu.Add(new MenuList("rusage", "R 模式", new[] { "可击中多个英雄", "连招可击杀" }));
                     ComboMenu.Add(new MenuSlider("rhit", "若可击中 >= (可击中多个英雄模式)", 2, 1, 5));
                     ComboMenu.Add(new MenuKeyBind("semir", "半自动R", Keys.T, KeyBindType.Press));
                     ComboMenu.Add(new MenuBool("support", "辅助模式"));
@@ -403,12 +403,12 @@ namespace SupportAIO.Champions
             {
                 ComboMenu = new Menu("combo", "Combo");
                 {
-                    ComboMenu.Add(new MenuList<string>("mode", "Combo Usage", new[] { "Q > W > R > E > W", "E > W > R > Q > W" }));
+                    ComboMenu.Add(new MenuList("mode", "Combo Usage", new[] { "Q > W > R > E > W", "E > W > R > Q > W" }));
                     ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
                     ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
                     ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));
                     ComboMenu.Add(new MenuBool("user", "Use R in Combo"));
-                    ComboMenu.Add(new MenuList<string>("rusage", "R Usage", new[] { "If Hits X Enemies", "If Killable with Combo" }));
+                    ComboMenu.Add(new MenuList("rusage", "R Usage", new[] { "If Hits X Enemies", "If Killable with Combo" }));
                     ComboMenu.Add(new MenuSlider("rhit", "If X Enemies <= (If Hits X Enemies Mode)", 2, 1, 5));
                     ComboMenu.Add(new MenuKeyBind("semir", "Semi-R Key", Keys.T, KeyBindType.Press));
                     ComboMenu.Add(new MenuBool("support", "Support Mode"));

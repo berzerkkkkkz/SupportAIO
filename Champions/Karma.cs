@@ -336,15 +336,15 @@ namespace SupportAIO.Champions
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
 
-            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuList("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
             RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
-            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            language = RootMenu.GetValue<MenuList>("language").Index;
 
             if (language != 1)
             {
                 ComboMenu = new Menu("combo", "连招");
                 {
-                    ComboMenu.Add(new MenuList<string>("combomode", "连招模式", new[] { "R - Q", "R - W", "R - E" }));
+                    ComboMenu.Add(new MenuList("combomode", "连招模式", new[] { "R - Q", "R - W", "R - E" }));
                     ComboMenu.Add(new MenuBool("useq", "使用 Q"));
                     ComboMenu.Add(new MenuBool("usew", "使用 W"));
                     ComboMenu.Add(new MenuBool("usee", "使用 E"));
@@ -386,7 +386,7 @@ namespace SupportAIO.Champions
             {
                 ComboMenu = new Menu("combo", "Combo");
                 {
-                    ComboMenu.Add(new MenuList<string>("combomode", "Combo Mode", new[] { "R - Q", "R - W", "R - E" }));
+                    ComboMenu.Add(new MenuList("combomode", "Combo Mode", new[] { "R - Q", "R - W", "R - E" }));
                     ComboMenu.Add(new MenuBool("useq", "Use Q in Combo"));
                     ComboMenu.Add(new MenuBool("usew", "Use W in Combo"));
                     ComboMenu.Add(new MenuBool("usee", "Use E in Combo"));

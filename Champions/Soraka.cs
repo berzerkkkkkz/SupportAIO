@@ -287,9 +287,9 @@ namespace SupportAIO.Champions
             RootMenu = new Menu("root", $"辅助合集{ObjectManager.Player.CharacterName}", true);
 
 
-            RootMenu.Add(new MenuList<string>("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
+            RootMenu.Add(new MenuList("language", "Language(语言选择)", new[] { "中文", "Englsih" }) { Index = 0 });
             RootMenu.Add(new MenuSeparator("1", "Press F5 to reload language(按 F5 确认切换语言)"));
-            language = RootMenu.GetValue<MenuList<string>>("language").Index;
+            language = RootMenu.GetValue<MenuList>("language").Index;
             if (language != 1)
             {
                 ComboMenu = new Menu("combo", "连招");
@@ -318,7 +318,7 @@ namespace SupportAIO.Champions
                 WhiteList = new Menu("heal", "W设定");
                 {
                     WhiteList.Add(new MenuBool("autow", "启用W"));
-                    WhiteList.Add(new MenuList<string>("mode", "W优先级", new[] { "AD优先", "AP优先", "低血量百分比优先", "低血量数值优先", "白名单优先" }));
+                    WhiteList.Add(new MenuList("mode", "W优先级", new[] { "AD优先", "AP优先", "低血量百分比优先", "低血量数值优先", "白名单优先" }));
                     WhiteList.Add(new MenuSlider("ally", "队友血量 %<=", 50));
                     WhiteList.Add(new MenuSlider("me", "禁用W若自身血量 %<=", 30));
                     WhiteList.Add(new MenuBool("autor", "启用R"));
@@ -382,7 +382,7 @@ namespace SupportAIO.Champions
                 WhiteList = new Menu("heal", "Healing");
                 {
                     WhiteList.Add(new MenuBool("autow", "Enable W Healing"));
-                    WhiteList.Add(new MenuList<string>("mode", "Healing Priority", new[] { "Most AD", "Most AP", "Least Health", "Least Health (Squishies)", "Whitelist" }));
+                    WhiteList.Add(new MenuList("mode", "Healing Priority", new[] { "Most AD", "Most AP", "Least Health", "Least Health (Squishies)", "Whitelist" }));
                     WhiteList.Add(new MenuSlider("ally", "Ally Health Percent <=", 50));
                     WhiteList.Add(new MenuSlider("me", "Don't W if my Health <=", 30));
                     WhiteList.Add(new MenuBool("autor", "Enable R Healing"));
