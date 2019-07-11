@@ -278,8 +278,8 @@ namespace SupportAIO.Champions
                 {
                     DrawMenu.Add(new MenuBool("drawe", "显示 E 距离"));
                     DrawMenu.Add(new MenuBool("drawr", "显示 R 距离"));
-
                 }
+                RootMenu.Add(DrawMenu);
             }
             else
             {
@@ -322,7 +322,8 @@ namespace SupportAIO.Champions
                 }
                 RootMenu.Add(DrawMenu);
             }
-            RootMenu.Add(DrawMenu);
+
+            RootMenu.Attach();
         }
 
         protected override void SetSpells()
